@@ -115,35 +115,55 @@ namespace Task8
             return 1;
         }
 
+        public static bool Exit() // выход из программы
+        {
+            WriteLine("Желаете начать сначала или нет? \nВведите да или нет");
+            var word = Convert.ToString(ReadLine()); // ответ пользователя
+            Clear();
+            if (word == "да" || word == "Да" || word == "ДА")
+            {
+                Clear();
+                return false;
+            }
+            Clear();
+            WriteLine("Вы ввели 'нет' или что-то непонятное. Нажмите любую клавишу, чтобы выйти из программы.");
+            ReadKey();
+            return true;
+        }
+
         static void Main(string[] args)
         {
-            WriteLine("Введите число вершин в графе:");
-            int top = InputNumber();
-            WriteLine("Введите число ребер в графе: ");
-            int edge = InputNumber();
-            WriteLine("Задайте матрицу инциденций:");
-            int[,] incid = ArrInput(top, edge);
-            bool ok;
+            bool okay;
             do
             {
-                ok = Check(incid, top, edge);
-                if (ok) continue;
-                WriteLine("Неверно введена матрица");
-                incid = ArrInput(top, edge);
-            } while (ok);
-
-            WriteLine("Полученная матрица:");
-            for (var i = 0; i < top; i++)
-            {
-                for (var j = 0; j < edge; j++)
+                WriteLine("Введите число вершин в графе:");
+                int top = InputNumber();
+                WriteLine("Введите число ребер в графе: ");
+                int edge = InputNumber();
+                WriteLine("Задайте матрицу инциденций:");
+                int[,] incid = ArrInput(top, edge);
+                bool ok;
+                do
                 {
-                    Write(incid[i, j]);
+                    ok = Check(incid, top, edge);
+                    if (ok) continue;
+                    WriteLine("Неверно введена матрица");
+                    incid = ArrInput(top, edge);
+                } while (ok);
+
+                WriteLine("Полученная матрица:");
+                for (var i = 0; i < top; i++)
+                {
+                    for (var j = 0; j < edge; j++)
+                    {
+                        Write(incid[i, j]);
+                    }
+                    WriteLine();
                 }
-                WriteLine();
-            }
-            
-            WriteLine(Action(incid, 0));
-            Read();
+
+                WriteLine(Action(incid, 0));
+                okay = Exit();
+            } while (!okay);
         }
     }
 }
