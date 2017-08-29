@@ -91,23 +91,23 @@ namespace Task8
             }
             return incid;
         }
-        
-        private static List<int> Arr = new List<int>();
+
+        public static List<int> Arr = new List<int>();
 
         public static int Action(int[,] a, int checkStart)
         {
             Arr.Add(checkStart);
             foreach (var p in Arr)
             {
-                for (int i = 0; i < a.GetLength(0); i++)
+                for (var i = 0; i < a.GetLength(0); i++)
                     if (a[p,i] == 1) 
-                        for (int j = 0; j<a.GetLength(1); j++)
+                        for (var j = 0; j<a.GetLength(1); j++)
                             if (j == 1 && !Arr.Contains(j))
                                 Arr.Add(j);
             }
 
-            int num = Arr[0];
-            for (int i = 0; i < a.GetLength(0) && num == Arr[0]; i++)
+            var num = Arr[0];
+            for (var i = 0; i < a.GetLength(0) && num == Arr[0]; i++)
                 if (!Arr.Contains(i))
                     num = i;
 
@@ -137,11 +137,11 @@ namespace Task8
             do
             {
                 WriteLine("Введите число вершин в графе:");
-                int top = InputNumber();
+                var top = InputNumber();
                 WriteLine("Введите число ребер в графе: ");
-                int edge = InputNumber();
+                var edge = InputNumber();
                 WriteLine("Задайте матрицу инциденций:");
-                int[,] incid = ArrInput(top, edge);
+                var incid = ArrInput(top, edge);
                 bool ok;
                 do
                 {
@@ -153,13 +153,8 @@ namespace Task8
 
                 WriteLine("Полученная матрица:");
                 for (var i = 0; i < top; i++)
-                {
-                    for (var j = 0; j < edge; j++)
-                    {
-                        Write(incid[i, j]);
-                    }
+                    for (var j = 0; j < edge; j++) Write(incid[i, j]);
                     WriteLine();
-                }
 
                 WriteLine(Action(incid, 0));
                 okay = Exit();
