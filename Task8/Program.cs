@@ -8,26 +8,25 @@ namespace Task8
     {
         public static int Input() // функция проверки ввода, разрешающая вводить только 0 и 1
         {
-            int currentSymbol = 0; // переменная для введенного символа
-            bool convertResult = false; // переменная, определяющая верно ли введен символ
+            var currentSymbol = 0; // переменная для введенного символа
+            var convertResult = false; // переменная, определяющая верно ли введен символ
             while (!convertResult)
             {
                 ConsoleKeyInfo keyPress = ReadKey(true); // ввод символа
                 int input = keyPress.KeyChar; // код введенного символа
                 // символ введен верно, если его код совпадает с кодом нуля или единицы
                 convertResult = Convert.ToInt32(input) == 48 || Convert.ToInt32(input) == 49;
-                if (convertResult) // если символ введен верно, вывод его в консоль
+                if (!convertResult) continue;
+                // если символ введен верно, вывод его в консоль
+                if (input == 48)
                 {
-                    if (input == 48)
-                    {
-                        WriteLine(0);
-                        currentSymbol = 0;
-                    }
-                    else
-                    {
-                        WriteLine(1);
-                        currentSymbol = 1;
-                    }
+                    WriteLine(0);
+                    currentSymbol = 0;
+                }
+                else
+                {
+                    WriteLine(1);
+                    currentSymbol = 1;
                 }
             }
             return currentSymbol;
@@ -35,7 +34,7 @@ namespace Task8
 
         public static int InputNumber() // ввод числа N
         {
-            int number = 0;
+            var number = 0;
             bool ok;
             do
             {
@@ -63,27 +62,25 @@ namespace Task8
             return number;
         }
 
-        public static bool Check(int[,] arr, int top, int edge)
+        public static bool Check(int[,] arr, int top, int edge) // проверка матрицы на наличие двух единиц в столбце
         {
-            int sum = 0;
-            for (int i = 0; i < top; i++)
+            var sum = 0; // переменная для суммы элементов в столбце
+            for (var i = 0; i < top; i++)
             {
-                for (int j = 0; j < edge; j++)
-                {
-                    sum += arr[i, j];
-                }
+                for (var j = 0; j < edge; j++)
+                    sum += arr[i, j]; // вычисление суммы
                 if (sum != 2) return false;
                 sum = 0;
             }
             return true;
         }
 
-        public static int[,] ArrInput(int top, int edge)
+        public static int[,] ArrInput(int top, int edge) // ввод матрицы инциденций
         {
-            int[,] incid = new int[top, edge];
-            for (int i = 0; i < top; i++)
+            var incid = new int[top, edge];
+            for (var i = 0; i < top; i++)
             {
-                for (int j = 0; j < edge; j++)
+                for (var j = 0; j < edge; j++)
                 {
                     WriteLine("Введите значение ячейки {0} строки {1}", j+1, i+1);
                     incid[i, j] = Input();
@@ -92,27 +89,27 @@ namespace Task8
             return incid;
         }
 
-        public static List<int> Arr = new List<int>();
+        public static List<int> Arr = new List<int>(); // лист с проверенными вершинами
 
-        public static int Action(int[,] a, int checkStart)
+        public static int Action(int[,] a, int checkStart) // вычисление количества компонент связности
         {
-            Arr.Add(checkStart);
+            Arr.Add(checkStart); // добавление в лист первой вершины
             foreach (var p in Arr)
             {
                 for (var i = 0; i < a.GetLength(0); i++)
                     if (a[p,i] == 1) 
-                        for (var j = 0; j<a.GetLength(1); j++)
-                            if (j == 1 && !Arr.Contains(j))
+                        for (var j = 0; j < a.GetLength(1); j++)
+                            if (j == 1 && !Arr.Contains(j)) // если до вершины можно дойти из первой, то добавляем ее в лист
                                 Arr.Add(j);
             }
-
-            var num = Arr[0];
+            // поиск числа, которого нет в листе
+            var num = Arr[0]; 
             for (var i = 0; i < a.GetLength(0) && num == Arr[0]; i++)
                 if (!Arr.Contains(i))
                     num = i;
-
-            if (num != Arr[0]) return Action(a, num) + 1;
-            return 1;
+            // если такое число найдено, то вызов функции заново с этим числом как стартовой позицией
+            if (num != Arr[0]) return Action(a, num) + 1; 
+            return 1; // если не найдено, вернуть единицу
         }
 
         public static bool Exit() // выход из программы
@@ -136,6 +133,7 @@ namespace Task8
             bool okay;
             do
             {
+                // ввод матрицы
                 WriteLine("Введите число вершин в графе:");
                 var top = InputNumber();
                 WriteLine("Введите число ребер в графе: ");
@@ -151,13 +149,15 @@ namespace Task8
                     incid = ArrInput(top, edge);
                 } while (ok);
 
+                // вывод введенной матрицы для наглядности
                 WriteLine("Полученная матрица:");
                 for (var i = 0; i < top; i++)
                     for (var j = 0; j < edge; j++) Write(incid[i, j]);
                     WriteLine();
 
-                WriteLine(Action(incid, 0));
-                okay = Exit();
+                // вычисление и вывод результата
+                WriteLine("В данном графе {0} компонент связности", Action(incid, 0));
+                okay = Exit(); // выход
             } while (!okay);
         }
     }
