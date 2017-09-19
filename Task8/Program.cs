@@ -94,12 +94,14 @@ namespace Task8
         public static int Action(int[,] a, int checkStart) // вычисление количества компонент связности
         {
             Arr.Add(checkStart); // добавление в лист первой вершины
-            foreach (var p in Arr)
+            for (var k = 0; k < Arr.Count; k++)
             {
+                var p = Arr[k];
                 for (var i = 0; i < a.GetLength(0); i++)
-                    if (a[p,i] == 1) 
+                    if (a[p, i] == 1)
                         for (var j = 0; j < a.GetLength(1); j++)
-                            if (j == 1 && !Arr.Contains(j)) // если до вершины можно дойти из первой, то добавляем ее в лист
+                            if (j == 1 && !Arr.Contains(j)
+                            ) // если до вершины можно дойти из первой, то добавляем ее в лист
                                 Arr.Add(j);
             }
             // поиск числа, которого нет в листе
